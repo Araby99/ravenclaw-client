@@ -12,7 +12,6 @@ export default () => {
     const [password, setPassword] = useState(false);
     const [submit, setSubmit] = useState(false);
     const router = useRouter();
-    console.log();
     const login = e => {
         e.preventDefault();
         setPassword(false)

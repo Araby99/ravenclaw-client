@@ -12,7 +12,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 export default () => {
     const [user, setUser] = useContext(UserContext);
-    console.log(user, null == 0);
     useEffect(() => {
         if (user == 0) {
             Router.push(
