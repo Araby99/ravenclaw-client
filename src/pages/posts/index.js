@@ -4,12 +4,15 @@ import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import Post from '@/components/Post'
 import Link from 'next/link'
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default () => {
     const [posts, setPosts] = useState();
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         axios.get("/posts").then(result => {
             setPosts(result.data);
+            setLoading(false)
         })
     }, [])
     return (
@@ -33,7 +36,14 @@ export default () => {
                         posts?.map((post, index) => <Post key={index} post={post} />)
                     }
                     {
-                        !posts?.length && (<h1 className='text-bold'>لا توجد مقالات</h1>)
+                        loading ? <div className="flex justify-center">
+                            <ClipLoader
+                                color="#13699c"
+                                size={50}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                            />
+                        </div> : !posts?.length && (<h1 className='text-bold'>لا توجد مقالات</h1>)
                     }
                 </div>
             </div>
