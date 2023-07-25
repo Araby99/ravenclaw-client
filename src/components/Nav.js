@@ -79,7 +79,7 @@ export default () => {
                                                 <span className="sr-only">Open user menu</span>
                                                 <img
                                                     className="h-8 w-8 rounded-full"
-                                                    src={user.avatar ? user.avatar : "avatar/user.png"}
+                                                    src={user.avatar ? user.avatar : "/avatar/user.png"}
                                                     alt={user.name}
                                                 />
                                             </Menu.Button>
