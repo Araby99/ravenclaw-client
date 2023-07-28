@@ -35,17 +35,20 @@ export default () => {
     }, [router.query.id])
     if (!post) {
         return (
-            <div className='flex justify-center items-center h-screen'>
+            <>
                 <Head>
                     <title>ريفنكلاو</title>
                 </Head>
-                <ClipLoader
-                    color="#13699c"
-                    size={50}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                />
-            </div>
+                <Nav />
+                <div className='flex justify-center items-center h-screen'>
+                    <ClipLoader
+                        color="#13699c"
+                        size={50}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    />
+                </div>
+            </>
         )
     }
     const deletePost = id => {
@@ -103,6 +106,11 @@ export default () => {
                     </div>
                 )}
                 <div dangerouslySetInnerHTML={{ __html: post.description }} />
+                <div className="flex gap-5">
+                    {post.categories.map((category, index) => <Link key={index} href={`/posts/tags/${category}`}><button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded">
+                        {category}
+                    </button></Link>)}
+                </div>
                 <div className="flex gap-5 items-center">
                     <p>تم الإنشاء بتاريخ : <span className='text-gray-500'>{arabicDate(post.created_at)}</span></p>
                     <p>تم آخر تعديل بتاريخ : <span className='text-gray-500'>{arabicDate(post.updated_at)}</span></p>

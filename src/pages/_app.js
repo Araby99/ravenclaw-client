@@ -6,7 +6,8 @@ export const UserContext = createContext();
 
 export default ({ Component, pageProps }) => {
     const [user, setUser] = useState(null);
-    axios.defaults.baseURL = "https://ravenclaw.onrender.com";
+    //https://ravenclaw.onrender.com
+    axios.defaults.baseURL = "http://localhost:8000";
     useEffect(() => {
         if (localStorage.getItem("user") !== 0) {
             setUser(JSON.parse(localStorage.getItem("user")))

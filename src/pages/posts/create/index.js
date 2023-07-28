@@ -9,6 +9,7 @@ import 'react-quill/dist/quill.snow.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ClipLoader from "react-spinners/ClipLoader";
+import Creatable from 'react-select/creatable';
 
 export default () => {
     const [user, setUser] = useContext(UserContext);
@@ -51,8 +52,25 @@ export default () => {
     const [description, setDescription] = useState('');
     const [titleError, setTitleError] = useState(false);
     const [descriptionError, setDescriptionError] = useState(false);
-    const [createLoading, setCreateLoading] = useState(false)
+    const [createLoading, setCreateLoading] = useState(false);
+    const [tags, setTags] = useState();
+    const [options, setOptions] = useState([]);
+    useEffect(() => {
+        axios.get("/categories").then(result => {
+            let options = [];
+            for (let i = 0; i < result.data.length; i++) {
+                const obj = { label: result.data[i].title, value: result.data[i].title };
+                options.push(obj);
+            }
+            setOptions(options)
+        })
+    }, [])
+
     const create = () => {
+        let categories = [];
+        if (tags) {
+            for (let i = 0; i < tags.length; i++) categories.push(tags[i].value);
+        }
         setCreateLoading(true)
         setTitleError(false)
         setDescriptionError(false)
@@ -74,7 +92,8 @@ export default () => {
                     title,
                     description,
                     author: user.username,
-                    cover: res.data.secure_url
+                    cover: res.data.secure_url,
+                    categories
                 }
                 axios.post("/posts", data).then(result => {
                     setCreateLoading(false)
@@ -97,7 +116,8 @@ export default () => {
             const data = {
                 title,
                 description,
-                author: user.username
+                author: user.username,
+                categories
             }
             axios.post("/posts", data).then(result => {
                 setCreateLoading(false)
@@ -133,6 +153,10 @@ export default () => {
                 <div className="flex justify-center mt-10">
                     <img ref={avatar} className='w-20' alt="cover" />
                     <input type="file" accept='image/png, image/jpeg' onChange={e => changeAvatar(e)} />
+                </div>
+                <div className="mt-10">
+                    <p className="text-4xl mb-3">العلامات</p>
+                    <Creatable placeholder="ابحث..." isMulti isSearchable isRtl isClearable options={options} defaultValue={tags} onChange={setTags} />
                 </div>
                 <div className="flex justify-center mt-10">
                     <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={() => create()}>

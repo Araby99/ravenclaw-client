@@ -21,6 +21,11 @@ export default ({ post }) => {
                 )
             }
             <div className='max-h-12 overflow-hidden' dangerouslySetInnerHTML={{ __html: post.description }} />
+            <div className="flex gap-5">
+                {post.categories.map((category, index) => <Link key={index} href={`/posts/tags/${category}`}><button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded">
+                    {category}
+                </button></Link>)}
+            </div>
             {author && (
                 <Link href={`/users/${author.username}`} className="flex items-center gap-5">
                     <img src={author.avatar ? author.avatar : "/avatar/user.png"} alt={author.name} className='rounded-full w-10 h-10 rounded' />

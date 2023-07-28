@@ -9,6 +9,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import 'react-quill/dist/quill.snow.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Creatable from 'react-select/creatable';
 
 export default () => {
     const [user, setUser] = useContext(UserContext);
@@ -17,6 +18,18 @@ export default () => {
     const [title, setTitle] = useState();
     const [description, setDescription] = useState();
     const [file, setFile] = useState();
+    const [options, setOptions] = useState([]);
+    const [tags, setTags] = useState();
+    useEffect(() => {
+        axios.get("/categories").then(result => {
+            let options = [];
+            for (let i = 0; i < result.data.length; i++) {
+                const obj = { label: result.data[i].title, value: result.data[i].title };
+                options.push(obj);
+            }
+            setOptions(options)
+        })
+    }, [])
     useEffect(() => {
         if (router.query.id !== undefined) {
             axios.get(`/posts/${router.query.id}`).then(result => {
@@ -24,6 +37,12 @@ export default () => {
                 setTitle(result.data.title)
                 setDescription(result.data.description)
                 setFile(result.data.cover)
+                let tags = [];
+                for (let i = 0; i < result.data.categories.length; i++) {
+                    const obj = { label: result.data.categories[i], value: result.data.categories[i] }
+                    tags.push(obj);
+                }
+                setTags(tags)
                 if (user == 0) {
                     Router.push(
                         {
@@ -73,6 +92,8 @@ export default () => {
     const [descriptionError, setDescriptionError] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
     const edit = () => {
+        let categories = [];
+        for (let i = 0; i < tags.length; i++) categories.push(tags[i].value);
         setEditLoading(true)
         setTitleError(false)
         setDescriptionError(false)
@@ -94,7 +115,8 @@ export default () => {
                     title,
                     description,
                     author: user.username,
-                    cover: res.data.secure_url
+                    cover: res.data.secure_url,
+                    categories
                 }
                 axios.put(`/posts/${post._id}`, data).then(result => {
                     setEditLoading(false)
@@ -117,7 +139,8 @@ export default () => {
             const data = {
                 title,
                 description,
-                author: user.username
+                author: user.username,
+                categories
             }
             axios.put(`/posts/${post._id}`, data).then(result => {
                 setEditLoading(false)
@@ -174,6 +197,10 @@ export default () => {
                 <div className="flex justify-center mt-10 items-center gap-5">
                     <img ref={avatar} className='w-20' alt="cover" src={post.cover} />
                     <input type="file" accept='image/png, image/jpeg' onChange={e => changeAvatar(e)} />
+                </div>
+                <div className="mt-10">
+                    <p className="text-4xl mb-3">العلامات</p>
+                    <Creatable placeholder="ابحث..." isMulti isSearchable isRtl isClearable options={options} defaultValue={tags} onChange={setTags} />
                 </div>
                 <div className="flex justify-center mt-10">
                     <button className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded" onClick={() => edit()}>
