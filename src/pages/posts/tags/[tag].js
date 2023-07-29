@@ -47,6 +47,7 @@ export default () => {
             </Head>
             <Nav />
             <div className="container lg:w-3/4 p-10 m-auto flex gap-10 flex-col">
+                <p className="text-4xl font-bold underline">المقالات المرتبطة بالعلامة "{router.query.tag}"</p>
                 {posts.map((post, index) => <Post key={index} post={post} />)}
             </div>
         </>

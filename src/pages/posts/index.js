@@ -22,7 +22,6 @@ export default () => {
             setLoading(false)
         })
     }, [])
-    console.log(tags);
     return (
         <>
             <Head>
@@ -42,18 +41,23 @@ export default () => {
                 <div className="lg:w-3/12 mx-auto">
                     <Search posts={posts} setFilterdPosts={setFilterdPosts} />
                 </div>
-                <div className="flex gap-5">
-                    {loading ? <div className="flex justify-center">
-                        <ClipLoader
-                            color="#13699c"
-                            size={50}
-                            aria-label="Loading Spinner"
-                            data-testid="loader"
-                        />
-                    </div> : tags.map((category, index) => <Link key={index} href={`/posts/tags/${category.title}`}><button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded">
-                        {category.title}
-                    </button></Link>)}
-                </div>
+                {(tags && tags.length) ? (
+                    <>
+                        <p className="text-4xl font-bold underline mb-5">العلامات</p>
+                        <div className="flex gap-5">
+                            {loading ? <div className="flex justify-center">
+                                <ClipLoader
+                                    color="#13699c"
+                                    size={50}
+                                    aria-label="Loading Spinner"
+                                    data-testid="loader"
+                                />
+                            </div> : tags.map((category, index) => <Link key={index} href={`/posts/tags/${category.title}`}><button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded">
+                                {category.title}
+                            </button></Link>)}
+                        </div>
+                    </>
+                ) : null}
                 <div className="container my-10 flex gap-10 flex-col">
                     {
                         filterdposts?.map((post, index) => <Post key={index} post={post} />)
